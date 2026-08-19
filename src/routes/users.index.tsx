@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronRight, Loader2 } from "lucide-react";
 
 import { supabase, type Profile } from "@/lib/supabase";
-import { RequireAuth } from "@/components/require-auth";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { RequireAuth } from "@/components/RequireAuth";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 
 export const Route = createFileRoute("/users/")({
   head: () => ({
