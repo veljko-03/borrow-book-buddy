@@ -153,7 +153,10 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image: radial-gradient(
-challenge, transparent);
+      circle at 15% -10%,
+      oklch(0.93 0.05 75 / 0.8),
+      transparent 55%
+    );
   }
 
   h1,
