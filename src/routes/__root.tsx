@@ -8,9 +8,13 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { BookOpen, LogOut } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
   return (
@@ -77,19 +81,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Borrow Book — Library borrowing made simple" },
+      {
+        name: "description",
+        content:
+          "Borrow Book lets library members log the books they borrow and browse what everyone else is reading.",
+      },
+      { property: "og:title", content: "Borrow Book" },
+      {
+        property: "og:description",
+        content: "Log your library borrows and see what other members are reading.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter+Tight:wght@400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -114,13 +126,66 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function SiteHeader() {
+  const { user, signOut } = useAuth();
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-5">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="bg-warm-gradient flex size-9 items-center justify-center rounded-xl text-primary-foreground">
+            <BookOpen className="size-5" />
+          </span>
+          <span className="font-display text-lg font-semibold">Borrow Book</span>
+        </Link>
+
+        <nav className="flex items-center gap-1 text-sm">
+          <Link
+            to="/users"
+            className="rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            activeProps={{ className: "rounded-lg px-3 py-2 font-medium bg-secondary text-foreground" }}
+          >
+            Users
+          </Link>
+          <Link
+            to="/borrow"
+            className="rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            activeProps={{ className: "rounded-lg px-3 py-2 font-medium bg-secondary text-foreground" }}
+          >
+            Borrow a book
+          </Link>
+          {user ? (
+            <Button variant="ghost" size="sm" className="ml-1 gap-1.5" onClick={() => signOut()}>
+              <LogOut className="size-4" />
+              Sign out
+            </Button>
+          ) : (
+            <Link
+              to="/"
+              className="ml-1 rounded-lg bg-primary px-3 py-2 font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              Sign in
+            </Link>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AuthProvider>
+        <div className="min-h-screen">
+          <SiteHeader />
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </div>
+        <Toaster position="top-center" />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
