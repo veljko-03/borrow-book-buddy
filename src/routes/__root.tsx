@@ -12,9 +12,9 @@ import { BookOpen, LogOut } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { AuthProvider, useAuth } from "@/hooks/use-auth";
-import { Toaster } from "@/components/ui/sonner";
-import { Button } from "@/components/ui/button";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { Toaster } from "@/components/ui/Sonner";
+import { Button } from "@/components/ui/Button";
 
 function NotFoundComponent() {
   return (
